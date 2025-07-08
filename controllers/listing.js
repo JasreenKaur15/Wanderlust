@@ -11,23 +11,6 @@ module.exports.renderNewForm=(req,res)=>{
     res.render("listings/new.ejs");
 }
 
-// module.exports.showListing=async(req,res)=>{
-//     let{id}=req.params;
-//     const listing=await Listing.findById(id).populate({
-//         path:"reviews",
-//         populate:{
-//             path:"author"
-//         },
-//     }).populate("owner");//populate method is used to show the whole data not only the id
-//     if(!listing){
-//         req.flash("error","Listing you requested for does not exist!");
-//         return res.redirect("/listings");
-//     }
-//     console.log(listing);
-//     res.render("listings/show.ejs",{listing,currUer: req.user,}
-// 
-// );
-//}
 
 
 module.exports.showListing = async (req, res) => {
@@ -46,9 +29,7 @@ module.exports.showListing = async (req, res) => {
         return res.redirect("/listings");
     }
 
-    res.render("listings/show.ejs", {
-        listing,
-        currUser: req.user  
+    res.render("listings/show.ejs", {listing,
     });
 };
 
