@@ -101,18 +101,23 @@
                 
             </div>
         </div>
-
+<div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const map = L.map('map').setView([28.6139, 77.2090], 5); // New Delhi
+    const latitude = "<%= listing.geometry.coordinates[1] %>";
+    const longitude = "<%= listing.geometry.coordinates[0] %>";
 
-    L.tileLayer(`https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=<%= mapToken %>`, {
+    const map = L.map("map").setView([latitude, longitude], 10);
+
+    L.tileLayer("https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=<%= mapToken %>", {
       attribution: '&copy; <a href="https://www.maptiler.com/">MapTiler</a>',
       tileSize: 512,
       zoomOffset: -1,
-      minZoom: 1
+      minZoom: 1,
     }).addTo(map);
+
+    const marker = L.marker([latitude, longitude]).addTo(map);
+    marker.bindPopup("<b><%= listing.title %></b><br><%= listing.location %>").openPopup();
   });
 </script>
 
-       

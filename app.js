@@ -104,10 +104,10 @@ app.all(/.*/, (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
 });
 
-app.use((err, req, res, next) => {
-    const { statusCode = 500, message = "Something went wrong" } = err;
-    res.status(statusCode).render("error.ejs", { message });
-});
+// app.use((err, req, res, next) => {
+//     const { statusCode = 500, message = "Something went wrong" } = err;
+//     res.status(statusCode).render("error.ejs", { message });
+// });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

@@ -1,4 +1,6 @@
 const Listing=require("../models/listing");
+const axios = require("axios");
+const mapToken=process.env.MAP_TOKEN;
 
 
 module.exports.index=async(req,res)=>{
@@ -29,25 +31,57 @@ module.exports.showListing = async (req, res) => {
         return res.redirect("/listings");
     }
 
-    res.render("listings/show.ejs", {listing,
+    res.render("listings/show.ejs", {listing,mapToken:process.env.MAP_TOKEN
     });
 };
 
 
 
+module.exports.createListing = async (req, res, next) => {
+    try {
+        const location = req.body.listing.location;
+
+        const response = await axios.get(`https://api.maptiler.com/geocoding/${location}.json`, {
+            params: {
+                key: mapToken,
+                limit: 1,
+            }
+        });
+
+        const geometry = response.data?.features?.[0]?.geometry;
+
+        if (!geometry) {
+            console.log("No geometry found for location:", location);
+            req.flash("error", "Invalid location provided.");
+            return res.redirect("/listings/new");
+        }
+
+        const url = req.file.path;
+        const filename = req.file.filename;
+        console.log(url, "..", filename);
+
+        const newListing = new Listing(req.body.listing);
+        newListing.owner = req.user._id;
+        newListing.image = { url, filename };
+        newListing.geometry = {
+            type: geometry.type,
+            coordinates: geometry.coordinates
+        };
+
+        const savedListing = await newListing.save();
+        console.log(savedListing);
+        req.flash("success", "New Listing Created");
+        res.redirect("/listings");
+
+    } catch (err) {
+        console.error("Error creating listing:", err);
+        req.flash("error", "Something went wrong while creating the listing.");
+        res.redirect("/listings/new");
+    }
+};
 
 
-module.exports.createListing=async(req,res,next)=>{
-    let url=req.file.path;
-    let filename=req.file.filename;
-    console.log(url,"..",filename);
-    const newListing=new Listing(req.body.listing);
-    newListing.owner=req.user._id;
-    newListing.image={url,filename};
-    await newListing.save();
-    req.flash("success","New Listing Created");
-    res.redirect("/listings");
-}
+
 
 module.exports.renderEditForm=async(req,res)=>{
     let{id}=req.params;
