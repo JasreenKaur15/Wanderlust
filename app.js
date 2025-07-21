@@ -66,6 +66,8 @@ store.on("error", (err) => {
     console.log("Error in session store", err);
 });
 
+app.set("trust proxy", 1);
+
 const sessionOptions = {
     secret: process.env.SECRET,
     store,
