@@ -188,7 +188,7 @@ const sampleListings = [
       url: "https://images.unsplash.com/photo-1521401830884-6c03c1c87ebb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGxvZGdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
     },
     price: 1500,
-    location: Nethe"Banff",
+    location: "Nethe Banff",
     country: "Canada",
   },
   {
